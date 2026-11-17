@@ -20,6 +20,7 @@
 #include "../led/LEDManager.h"
 #include "../routine/RoutineManager.h"
 #include "../weather/WeatherManager.h"
+#include "../ble/BleSpike.h"
 #include "NightMode.h"
 #include "SerialConsole.h"
 #include "ConsoleExtras.h"
@@ -115,6 +116,12 @@ void status() {
 bool exec(const char* cmd, char* args) {
   if (!strcmp(cmd, "alarms")) { Alarms.printStatus(Serial); return true; }
   if (!strcmp(cmd, "routine")) { Routine.printStatus(Serial); return true; }
+  if (!strcmp(cmd, "ble")) {  // phase A memory spike (KC_BLE_SPIKE builds only)
+    if (args && !strcmp(args, "on")) { blespike::printMem(Serial, "before"); blespike::start(); blespike::printMem(Serial, "ble-on"); }
+    else if (args && !strcmp(args, "off")) { blespike::stop(); blespike::printMem(Serial, "ble-off"); }
+    else blespike::printMem(Serial, blespike::running() ? "ble-on" : "now");
+    return true;
+  }
   if (!strcmp(cmd, "weather")) {
     float lat, lon;
     Settings& s = AppCfg.get();
