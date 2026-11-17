@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>M5 Fire Kids Clock - Installer</title>
+  <script type="module" src="https://unpkg.com/esp-web-tools@10.1.0/dist/web/install-button.js?module"></script>
+  <style>
+    :root { --pink: #F27BA5; --ink: #4A3F55; --soft: #8A7F96; --cream: #FFF8EE; --lav: #E3D6F7; }
+    body { margin: 0; font-family: system-ui, 'Segoe UI', sans-serif; background: var(--cream); color: var(--ink); }
+    main { max-width: 720px; margin: auto; padding: 24px 16px 48px; }
+    h1 { color: var(--pink); margin: 8px 0 4px; font-size: 34px; }
+    .card { background: #fff; border-radius: 20px; padding: 20px; margin: 16px 0; box-shadow: 0 3px 12px #0001; }
+    ol li { margin: 6px 0; }
+    .muted { color: var(--soft); font-size: 14px; }
+    esp-web-install-button button[slot="activate"] {
+      background: var(--pink); color: #fff; border: 0; border-radius: 999px; padding: 14px 28px;
+      font-size: 18px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 0 #d45c88;
+    }
+    img { max-width: 100%; border-radius: 16px; }
+  </style>
+</head>
+<body>
+<main>
+  <img src="../images/banner.svg" alt="M5 Fire Kids Clock">
+  <h1>Install in your browser</h1>
+  <p>Flash the M5 Fire Kids Clock onto an <b>original M5Stack Fire (K007)</b> straight from
+     Chrome or Edge on a computer - no tools to install.</p>
+  <div class="card">
+    <ol>
+      <li>Connect the Fire with a USB-C <b>data</b> cable.</li>
+      <li>Press <b>Install</b>, choose the serial port (CP210x / USB-to-UART).</li>
+      <li>Wait about 30 seconds until it says the installation is complete.</li>
+      <li>On the clock: <b>Settings &gt; Parent setup (phone)</b>, scan the QR code and enter your Wi-Fi.</li>
+    </ol>
+    <esp-web-install-button manifest="manifest.json">
+      <button slot="activate">Install Kids Clock v1.0.0</button>
+      <span slot="unsupported">Your browser does not support Web Serial. Use Chrome or Edge on a desktop computer.</span>
+      <span slot="not-allowed">Web Serial needs HTTPS - open this page from GitHub Pages.</span>
+    </esp-web-install-button>
+    <p class="muted">A fresh install erases saved alarms, routine, stars and Wi-Fi. No port
+      shown? Install the <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers">CP210x driver</a>.</p>
+  </div>
+  <p class="muted">Other ways to install (esptool, PlatformIO, Arduino IDE): see the
+    <a href="https://github.com/ElectroIoT/M5-Fire-Kids-Clock/blob/main/docs/FLASHING.md">flashing guide</a>.</p>
+</main>
+</body>
+</html>

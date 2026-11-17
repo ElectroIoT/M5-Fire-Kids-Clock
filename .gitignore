@@ -1,0 +1,7 @@
+.pio/
+.vscode/
+_backup/
+M5_Fire_Kids_Clock/src/config/Secrets.h
+*.bin
+!docs/flasher/*.bin
+__pycache__/

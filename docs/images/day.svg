@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" width="960" height="300" role="img" aria-label="A day with the Kids Clock, animated timeline">
+  <title>A day with the Kids Clock</title>
+  <defs>
+    <linearGradient id="day" x1="0" x2="1">
+      <stop offset="0" stop-color="#2D3166"/>
+      <stop offset=".24" stop-color="#FFE5C4"/>
+      <stop offset=".5" stop-color="#BFE6FF"/>
+      <stop offset=".74" stop-color="#E6D6FF"/>
+      <stop offset=".88" stop-color="#2D3166"/>
+      <stop offset="1" stop-color="#2D3166"/>
+    </linearGradient>
+  </defs>
+  <style>
+    .h { font: 800 22px 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+    .l { font: 700 13px 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+    .m { font: 600 12px 'Segoe UI', Arial, sans-serif; fill: #6F6480; }
+    .wl { font: 700 13px 'Segoe UI', Arial, sans-serif; fill: #FFFFFF; }
+    @keyframes travel { from { transform: translateX(0) } to { transform: translateX(840px) } }
+    .dot { animation: travel 12s linear infinite; }
+    @keyframes ring { 0%, 100% { transform: rotate(0) } 25% { transform: rotate(-14deg) } 75% { transform: rotate(14deg) } }
+    .bell { transform-box: fill-box; transform-origin: 50% 0; animation: ring .5s ease-in-out infinite; }
+  </style>
+  <rect width="960" height="300" rx="24" fill="#FFF8EE"/>
+  <text x="480" y="40" text-anchor="middle" class="h">A day with the clock</text>
+  <rect x="60" y="120" width="840" height="34" rx="17" fill="url(#day)"/>
+
+  <!-- hour ticks: 12 AM .. 12 AM over 840 px (35 px / h) -->
+  <g class="m" text-anchor="middle">
+    <text x="60" y="176">12 AM</text><text x="270" y="176">6 AM</text><text x="480" y="176">12 PM</text>
+    <text x="690" y="176">6 PM</text><text x="900" y="176">12 AM</text>
+  </g>
+
+  <!-- night mode bands -->
+  <rect x="60" y="120" width="227" height="34" rx="17" fill="#000" opacity=".15"/>
+  <rect x="795" y="120" width="105" height="34" rx="17" fill="#000" opacity=".15"/>
+  <text x="170" y="142" text-anchor="middle" class="wl">Night mode</text>
+  <text x="848" y="142" text-anchor="middle" class="wl">Night</text>
+
+  <!-- events -->
+  <g class="l">
+    <line x1="287" y1="96" x2="287" y2="120" stroke="#F27BA5" stroke-width="3"/>
+    <g class="bell"><path d="M279 72 a8 8 0 0 1 16 0 v10 l4 5 h-24 l4 -5z" fill="#F27BA5"/></g>
+    <text x="287" y="62" text-anchor="middle">6:30 AM wake-up alarm</text>
+    <text x="310" y="210">Sunrise lights, morning jobs</text>
+    <text x="310" y="228" class="m">Brush teeth, bath, dressed, breakfast, school bag</text>
+    <line x1="550" y1="154" x2="550" y2="196" stroke="#52C49E" stroke-width="3"/>
+    <text x="550" y="256" text-anchor="middle">Lunch, rest</text>
+    <line x1="655" y1="96" x2="655" y2="120" stroke="#9B7FD1" stroke-width="3"/>
+    <text x="655" y="88" text-anchor="middle">5 PM homework reminder</text>
+    <line x1="795" y1="96" x2="795" y2="120" stroke="#4A3F55" stroke-width="3"/>
+    <text x="800" y="76" text-anchor="middle">9 PM lullaby + dim</text>
+    <line x1="165" y1="154" x2="165" y2="196" stroke="#5AA9E6" stroke-width="3"/>
+    <text x="165" y="214" text-anchor="middle">3 AM: new day,</text>
+    <text x="165" y="232" text-anchor="middle" class="m">checklist resets</text>
+  </g>
+  <!-- moving "now" marker -->
+  <g class="dot">
+    <circle cx="60" cy="137" r="12" fill="#FFFFFF" stroke="#F27BA5" stroke-width="4"/>
+    <path d="M60 128 v9 h6" stroke="#F27BA5" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

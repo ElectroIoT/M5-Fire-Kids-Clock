@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="960" height="520" role="img" aria-label="Firmware architecture">
+  <title>Firmware architecture</title>
+  <style>
+    .h  { font: 800 22px 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+    .n  { font: 800 15px 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+    .d  { font: 500 12px 'Segoe UI', Arial, sans-serif; fill: #6F6480; }
+    .flow { fill: none; stroke: #C3B3DC; stroke-width: 3; stroke-dasharray: 8 7; animation: dash 1.2s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset: -30 } }
+    @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: .55 } }
+    .live { animation: pulse 2s ease-in-out infinite; }
+  </style>
+  <rect width="960" height="520" rx="24" fill="#FFF8EE"/>
+  <text x="480" y="40" text-anchor="middle" class="h">Non-blocking firmware - one cooperative loop, one background task</text>
+
+  <!-- flows -->
+  <path class="flow" d="M480 120 V150"/>
+  <path class="flow" d="M160 230 V260 M370 230 V260 M590 230 V260 M800 230 V260"/>
+  <path class="flow" d="M160 340 V370 M370 340 V370 M590 340 V370 M800 340 V370"/>
+  <path class="flow" d="M480 440 V460"/>
+
+  <!-- loop -->
+  <rect x="300" y="64" width="360" height="56" rx="18" fill="#F27BA5" class="live"/>
+  <text x="480" y="90" text-anchor="middle" class="n" style="fill:#fff">app::loop()  (core 1, never blocks)</text>
+  <text x="480" y="108" text-anchor="middle" class="d" style="fill:#FFE7F0">input &#8594; clock &#8594; Wi-Fi &#8594; alarms &#8594; routine &#8594; audio/LED &#8594; UI</text>
+
+  <rect x="40" y="150" width="880" height="80" rx="18" fill="#E3D6F7"/>
+  <g transform="translate(60 166)">
+    <rect width="200" height="50" rx="12" fill="#fff"/><text x="100" y="22" text-anchor="middle" class="n">ClockManager</text><text x="100" y="40" text-anchor="middle" class="d">SNTP, IST, manual set, RTC</text>
+    <rect x="210" width="200" height="50" rx="12" fill="#fff"/><text x="310" y="22" text-anchor="middle" class="n">AlarmManager</text><text x="310" y="40" text-anchor="middle" class="d">10 alarms, snooze, catch-up</text>
+    <rect x="430" width="200" height="50" rx="12" fill="#fff"/><text x="530" y="22" text-anchor="middle" class="n">RoutineManager</text><text x="530" y="40" text-anchor="middle" class="d">jobs, stars, reminders</text>
+    <rect x="640" width="200" height="50" rx="12" fill="#fff"/><text x="740" y="22" text-anchor="middle" class="n">NightMode</text><text x="740" y="40" text-anchor="middle" class="d">window, peek, skip</text>
+  </g>
+
+  <rect x="40" y="260" width="880" height="80" rx="18" fill="#BDF0DA"/>
+  <g transform="translate(60 276)">
+    <rect width="200" height="50" rx="12" fill="#fff"/><text x="100" y="22" text-anchor="middle" class="n">AudioManager</text><text x="100" y="40" text-anchor="middle" class="d">melodies, WAV, fade-in</text>
+    <rect x="210" width="200" height="50" rx="12" fill="#fff"/><text x="310" y="22" text-anchor="middle" class="n">LEDManager</text><text x="310" y="40" text-anchor="middle" class="d">10 x SK6812 effects</text>
+    <rect x="430" width="200" height="50" rx="12" fill="#fff"/><text x="530" y="22" text-anchor="middle" class="n">WiFiLink + WebPortal</text><text x="530" y="40" text-anchor="middle" class="d">back-off, backup, setup page</text>
+    <rect x="640" width="200" height="50" rx="12" fill="#fff"/><text x="740" y="22" text-anchor="middle" class="n">UiManager + screens</text><text x="740" y="40" text-anchor="middle" class="d">cached layers, PSRAM canvas</text>
+  </g>
+
+  <rect x="40" y="370" width="880" height="70" rx="18" fill="#BFE3FA"/>
+  <g transform="translate(60 382)">
+    <rect width="200" height="46" rx="12" fill="#fff"/><text x="100" y="20" text-anchor="middle" class="n">Settings + Storage</text><text x="100" y="37" text-anchor="middle" class="d">versioned CRC NVS blobs</text>
+    <rect x="210" width="200" height="46" rx="12" fill="#fff"/><text x="310" y="20" text-anchor="middle" class="n">core/ (pure C++)</text><text x="310" y="37" text-anchor="middle" class="d">12h time, alarm maths - 113 tests</text>
+    <rect x="430" width="200" height="46" rx="12" fill="#fff"/><text x="530" y="20" text-anchor="middle" class="n">M5Unified / M5GFX</text><text x="530" y="37" text-anchor="middle" class="d">display, buttons, speaker, power</text>
+    <rect x="640" width="200" height="46" rx="12" fill="#FFEDA6" class="live"/><text x="740" y="20" text-anchor="middle" class="n">WeatherManager task</text><text x="740" y="37" text-anchor="middle" class="d">core 0, Open-Meteo, no key</text>
+  </g>
+  <rect x="300" y="460" width="360" height="44" rx="14" fill="#4A3F55"/>
+  <text x="480" y="488" text-anchor="middle" class="n" style="fill:#fff">M5Stack Fire K007 - ESP32, 16 MB flash, PSRAM</text>
+</svg>

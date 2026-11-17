@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="M5 Fire Kids Clock - animated banner">
+  <title>M5 Fire Kids Clock</title>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE5C4"/>
+      <stop offset="1" stop-color="#D3EEFF"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE5C4"/>
+      <stop offset="1" stop-color="#D3EEFF"/>
+    </linearGradient>
+    <clipPath id="scr"><rect x="733" y="80" width="294" height="216" rx="4"/></clipPath>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#B49AC8" flood-opacity="0.35"/>
+    </filter>
+    <style>
+      .title { font: 800 64px 'Trebuchet MS', 'Segoe UI', Arial, sans-serif; fill: #F27BA5; }
+      .sub   { font: 600 26px 'Trebuchet MS', 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+      .tag   { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+      .chip  { font: 800 20px 'Segoe UI', Arial, sans-serif; }
+      .date  { font: 800 18px 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+      .seg   { fill: none; stroke: #F27BA5; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; }
+      .segw  { fill: none; stroke: #FFFFFF; stroke-width: 17; stroke-linecap: round; stroke-linejoin: round; }
+      @keyframes blink { 0%, 55% { opacity: 1 } 60%, 100% { opacity: 0 } }
+      @keyframes spin { to { transform: rotate(360deg) } }
+      @keyframes bob { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+      @keyframes drift { from { transform: translateX(-180px) } to { transform: translateX(1300px) } }
+      @keyframes twinkle { 0%, 100% { opacity: .25; transform: scale(.7) } 50% { opacity: 1; transform: scale(1.15) } }
+      @keyframes eye { 0%, 92%, 100% { transform: scaleY(1) } 95% { transform: scaleY(.1) } }
+      @keyframes led { 0% { fill: #FF7B9C } 20% { fill: #FFC94D } 40% { fill: #7FD8BE } 60% { fill: #5AA9E6 } 80% { fill: #9B7FD1 } 100% { fill: #FF7B9C } }
+      .colon { animation: blink 1s steps(1) infinite; }
+      .rays  { transform-origin: 865px 300px; animation: spin 14s linear infinite; }
+      .sunny { animation: bob 2.4s ease-in-out infinite; }
+      .cloud1 { animation: drift 38s linear infinite; }
+      .cloud2 { animation: drift 55s linear infinite -20s; }
+      .tw { transform-box: fill-box; transform-origin: center; animation: twinkle 2.2s ease-in-out infinite; }
+      .eyes { transform-box: fill-box; transform-origin: center; animation: eye 4s infinite; }
+      .led { animation: led 3s linear infinite; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="420" rx="28" fill="url(#sky)"/>
+  <g class="cloud1" fill="#FFFFFF" opacity=".9">
+    <circle cx="60" cy="90" r="26"/><circle cx="92" cy="76" r="34"/><circle cx="126" cy="92" r="24"/><rect x="60" y="90" width="66" height="26" rx="13"/>
+  </g>
+  <g class="cloud2" fill="#FFFFFF" opacity=".8">
+    <circle cx="40" cy="190" r="18"/><circle cx="64" cy="180" r="24"/><circle cx="88" cy="192" r="16"/><rect x="40" y="190" width="48" height="18" rx="9"/>
+  </g>
+  <g fill="#FFC94D">
+    <path class="tw" d="M560 60 l6 14 14 6 -14 6 -6 14 -6 -14 -14 -6 14 -6z"/>
+    <path class="tw" style="animation-delay:.7s" d="M1130 70 l5 11 11 5 -11 5 -5 11 -5 -11 -11 -5 11 -5z"/>
+    <path class="tw" style="animation-delay:1.3s" d="M610 360 l4 9 9 4 -9 4 -4 9 -4 -9 -9 -4 9 -4z"/>
+  </g>
+  <ellipse cx="300" cy="470" rx="420" ry="110" fill="#A6E3A1"/>
+  <ellipse cx="980" cy="480" rx="380" ry="100" fill="#7FCF8A"/>
+
+  <!-- Text -->
+  <text x="60" y="150" class="title">M5 Fire</text>
+  <text x="60" y="222" class="title" style="fill:#9B7FD1">Kids Clock</text>
+  <text x="62" y="270" class="sub">A cute pastel alarm clock for children</text>
+  <g transform="translate(62 300)">
+    <rect width="150" height="34" rx="17" fill="#FFFFFF" filter="url(#soft)"/><text x="75" y="23" text-anchor="middle" class="tag">12-hour AM/PM</text>
+    <rect x="162" width="112" height="34" rx="17" fill="#FFFFFF" filter="url(#soft)"/><text x="218" y="23" text-anchor="middle" class="tag">10 alarms</text>
+    <rect x="286" width="134" height="34" rx="17" fill="#FFFFFF" filter="url(#soft)"/><text x="353" y="23" text-anchor="middle" class="tag">Star rewards</text>
+    <rect x="432" width="140" height="34" rx="17" fill="#FFFFFF" filter="url(#soft)"/><text x="502" y="23" text-anchor="middle" class="tag">Works offline</text>
+  </g>
+
+  <!-- Device -->
+  <g filter="url(#soft)">
+    <rect x="690" y="40" width="380" height="330" rx="34" fill="#E5484D"/>
+    <rect x="704" y="54" width="352" height="302" rx="26" fill="#F25F64"/>
+    <rect x="725" y="72" width="310" height="232" rx="10" fill="#1E1B2E"/>
+  </g>
+  <rect x="733" y="80" width="294" height="216" rx="4" fill="url(#screen)"/>
+  <!-- digits 07:30 -->
+  <g transform="translate(748 98) scale(.62)">
+    <g class="segw">
+      <path d="M8 8 H52 V60 V112 H8 V60 Z"/><path d="M76 8 H120 V60 V112"/>
+      <path d="M174 8 H218 V60 H174 M218 60 V112 H174"/><path d="M242 8 H286 V60 V112 H242 V60 Z"/>
+    </g>
+    <g class="seg">
+      <path d="M8 8 H52 V60 V112 H8 V60 Z"/><path d="M76 8 H120 V60 V112"/>
+      <path d="M174 8 H218 V60 H174 M218 60 V112 H174"/><path d="M242 8 H286 V60 V112 H242 V60 Z"/>
+    </g>
+    <g class="colon" fill="#F27BA5" stroke="#FFFFFF" stroke-width="5">
+      <circle cx="147" cy="38" r="8"/><circle cx="147" cy="84" r="8"/>
+    </g>
+  </g>
+  <rect x="946" y="100" width="64" height="30" rx="15" fill="#F27BA5"/><text x="978" y="122" text-anchor="middle" class="chip" fill="#FFFFFF">AM</text>
+  <rect x="946" y="138" width="64" height="30" rx="15" fill="#FFFFFF"/><text x="978" y="160" text-anchor="middle" class="chip" fill="#C9BCD6">PM</text>
+  <text x="880" y="198" text-anchor="middle" class="date"><tspan fill="#F27BA5">Tuesday,</tspan> 17 Nov 2026</text>
+  <g clip-path="url(#scr)">
+  <ellipse cx="820" cy="336" rx="150" ry="66" fill="#A6E3A1"/>
+  <ellipse cx="1000" cy="346" rx="120" ry="60" fill="#7FCF8A"/>
+  <rect x="905" y="222" width="114" height="54" rx="14" fill="#FFFFFF"/>
+  <text x="962" y="246" text-anchor="middle" class="tag" style="font-size:15px">&#9200; 06:30 AM</text>
+  <text x="962" y="267" text-anchor="middle" class="tag" style="font-size:13px;fill:#9B7FD1">Good morning!</text>
+  <!-- sun -->
+  <g transform="translate(-75 -36) scale(1)"><g class="sunny">
+    <g class="rays" fill="#FFAE6B">
+      <path d="M865 300 l-4 -50 h8z"/><path d="M865 300 l-4 50 h8z"/><path d="M865 300 l-50 -4 v8z"/><path d="M865 300 l50 -4 v8z"/>
+      <path d="M865 300 l-38 -32 l6 -6z"/><path d="M865 300 l38 32 l-6 6z"/><path d="M865 300 l32 -38 l6 6z"/><path d="M865 300 l-32 38 l-6 -6z"/>
+    </g>
+    <circle cx="865" cy="300" r="27" fill="#FFAE6B"/>
+    <circle cx="865" cy="300" r="25" fill="#FFD966"/>
+    <g class="eyes" fill="#4A3F55"><circle cx="856" cy="296" r="3.5"/><circle cx="874" cy="296" r="3.5"/></g>
+    <circle cx="850" cy="306" r="4" fill="#FF9DB8"/><circle cx="880" cy="306" r="4" fill="#FF9DB8"/>
+    <path d="M858 307 q7 7 14 0" stroke="#4A3F55" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g></g>
+  </g>
+  <!-- buttons + LED bar -->
+  <g fill="#FFD3D5"><rect x="760" y="318" width="60" height="16" rx="8"/><rect x="850" y="318" width="60" height="16" rx="8"/><rect x="940" y="318" width="60" height="16" rx="8"/></g>
+  <g>
+    <circle class="led" cx="735" cy="370" r="6"/><circle class="led" style="animation-delay:-.3s" cx="770" cy="370" r="6"/>
+    <circle class="led" style="animation-delay:-.6s" cx="805" cy="370" r="6"/><circle class="led" style="animation-delay:-.9s" cx="840" cy="370" r="6"/>
+    <circle class="led" style="animation-delay:-1.2s" cx="875" cy="370" r="6"/><circle class="led" style="animation-delay:-1.5s" cx="910" cy="370" r="6"/>
+    <circle class="led" style="animation-delay:-1.8s" cx="945" cy="370" r="6"/><circle class="led" style="animation-delay:-2.1s" cx="980" cy="370" r="6"/>
+    <circle class="led" style="animation-delay:-2.4s" cx="1015" cy="370" r="6"/><circle class="led" style="animation-delay:-2.7s" cx="1050" cy="370" r="6"/>
+  </g>
+</svg>

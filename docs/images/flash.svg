@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 220" width="960" height="220" role="img" aria-label="Install in three steps, animated">
+  <title>Install in three steps</title>
+  <style>
+    .h { font: 800 20px 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+    .n { font: 900 26px 'Segoe UI', Arial, sans-serif; fill: #FFFFFF; }
+    .t { font: 800 17px 'Segoe UI', Arial, sans-serif; fill: #4A3F55; }
+    .s { font: 600 13px 'Segoe UI', Arial, sans-serif; fill: #6F6480; }
+    @keyframes fill { 0% { width: 0 } 70%, 100% { width: 220px } }
+    .bar { animation: fill 4s ease-in-out infinite; }
+    @keyframes hop { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+    .hop1 { animation: hop 1.6s ease-in-out infinite; }
+    .hop2 { animation: hop 1.6s ease-in-out .3s infinite; }
+    .hop3 { animation: hop 1.6s ease-in-out .6s infinite; }
+    @keyframes arrow { 0% { stroke-dashoffset: 24 } 100% { stroke-dashoffset: 0 } }
+    .ar { stroke: #C3B3DC; stroke-width: 4; stroke-dasharray: 8 4; fill: none; animation: arrow .8s linear infinite; }
+  </style>
+  <rect width="960" height="220" rx="24" fill="#FFF8EE"/>
+  <text x="480" y="36" text-anchor="middle" class="h">Install in three steps</text>
+  <g transform="translate(40 60)">
+    <rect width="260" height="130" rx="20" fill="#FFFFFF"/>
+    <g class="hop1"><circle cx="40" cy="40" r="22" fill="#F27BA5"/><text x="40" y="49" text-anchor="middle" class="n">1</text></g>
+    <text x="76" y="36" class="t">Plug in USB-C</text>
+    <text x="76" y="56" class="s">CP210x driver if needed</text>
+    <text x="20" y="96" class="s">Windows: COMx, Mac: /dev/cu.*</text>
+  </g>
+  <path class="ar" d="M308 125 H342"/>
+  <g transform="translate(350 60)">
+    <rect width="260" height="130" rx="20" fill="#FFFFFF"/>
+    <g class="hop2"><circle cx="40" cy="40" r="22" fill="#9B7FD1"/><text x="40" y="49" text-anchor="middle" class="n">2</text></g>
+    <text x="76" y="36" class="t">Flash firmware</text>
+    <text x="76" y="56" class="s">one .bin at 0x0</text>
+    <rect x="20" y="86" width="220" height="16" rx="8" fill="#E3D6F7"/>
+    <rect class="bar" x="20" y="86" width="0" height="16" rx="8" fill="#9B7FD1"/>
+  </g>
+  <path class="ar" d="M618 125 H652"/>
+  <g transform="translate(660 60)">
+    <rect width="260" height="130" rx="20" fill="#FFFFFF"/>
+    <g class="hop3"><circle cx="40" cy="40" r="22" fill="#52C49E"/><text x="40" y="49" text-anchor="middle" class="n">3</text></g>
+    <text x="76" y="36" class="t">Phone setup</text>
+    <text x="76" y="56" class="s">Settings &gt; Parent setup</text>
+    <text x="20" y="96" class="s">Scan QR, open 192.168.4.1,</text>
+    <text x="20" y="114" class="s">enter Wi-Fi - time syncs itself</text>
+  </g>
+</svg>
