@@ -4,6 +4,7 @@
 #include "../settings/SettingsManager.h"
 #include "../storage/StorageManager.h"
 #include "../audio/SoundList.h"
+#include "../api/EventLog.h"
 
 AlarmManager Alarms;
 
@@ -14,6 +15,12 @@ static constexpr uint16_t kAlarmVersion = 1;
 RTC_NOINIT_ATTR static int64_t g_lastMinute;
 RTC_NOINIT_ATTR static uint32_t g_lastMinuteMagic;
 static constexpr uint32_t kMinuteMagic = 0xA1A2A3A4;
+// Which alarm was ringing (and since when) - so a brownout / crash restart in the
+// middle of an alarm makes it ring again instead of silently stopping it.
+RTC_NOINIT_ATTR static int32_t g_ringIdx;
+RTC_NOINIT_ATTR static uint32_t g_ringEpoch;
+RTC_NOINIT_ATTR static uint32_t g_ringMagic;
+static constexpr uint32_t kRingMagic = 0x41524E47;  // "ARNG"
 
 static void preset(al::AlarmConfig& a, int h, int m, uint8_t rep, uint8_t sound, const char* label) {
   memset(&a, 0, sizeof a);
@@ -47,12 +54,18 @@ void AlarmManager::begin() {
   KC_LOG("Alarms: %s, %d enabled", StorageManager::resultName(r), enabledCount());
 
   const esp_reset_reason_t rr = esp_reset_reason();
-  const bool warm = rr != ESP_RST_POWERON && rr != ESP_RST_BROWNOUT && rr != ESP_RST_UNKNOWN;
+  // Brownout counts as warm: RTC memory and the system time survive it (verified).
+  const bool warm = rr != ESP_RST_POWERON && rr != ESP_RST_UNKNOWN;
   if (warm && g_lastMinuteMagic == kMinuteMagic) {
     lastMinute_ = g_lastMinute;  // resume: catch-up logic decides what to replay
     KC_LOG("Alarms: resuming after reset");
   }
   g_lastMinuteMagic = kMinuteMagic;
+  if (warm && g_ringMagic == kRingMagic && g_ringIdx >= 0 && g_ringIdx < KC_MAX_ALARMS) {
+    resumeIdx_ = g_ringIdx;
+    resumeEpoch_ = g_ringEpoch;
+  }
+  g_ringMagic = 0;
   lastClockSteps_ = Clock.stepCount();
 }
 
@@ -73,9 +86,13 @@ void AlarmManager::startRing(int i, bool snooze) {
   ringingSnooze_ = snooze;
   ringStartMs_ = millis();
   event_ = 1;
+  g_ringIdx = i;
+  g_ringEpoch = (uint32_t)time(nullptr);
+  g_ringMagic = kRingMagic;
   char hm[12];
   tl::formatHM12AmPm(hm, sizeof hm, alarms_[i].hour, alarms_[i].minute);
   KC_LOG("ALARM %d ringing: %s '%s'%s", i + 1, hm, alarms_[i].label, snooze ? " (snooze)" : "");
+  Events.add(EventType::AlarmRing, i, alarms_[i].label);
 }
 
 void AlarmManager::checkMinute(int64_t m) {
@@ -97,6 +114,16 @@ void AlarmManager::checkMinute(int64_t m) {
 void AlarmManager::loop() {
   if (!Clock.isValid()) return;  // no reliable time -> never guess
   const time_t now = time(nullptr);
+
+  // An alarm was ringing when the clock restarted (power dip / crash): ring again.
+  if (resumeIdx_ >= 0) {
+    const int idx = resumeIdx_;
+    resumeIdx_ = -1;
+    if (now >= (time_t)resumeEpoch_ && now - (time_t)resumeEpoch_ < (time_t)(KC_ALARM_RING_MAX_MS / 1000)) {
+      KC_LOG("ALARM %d: was ringing before the restart - ringing again", idx + 1);
+      startRing(idx, false);
+    }
+  }
   const int64_t minute = (int64_t)now / 60;
 
   if (lastMinute_ == 0) {
@@ -132,6 +159,7 @@ void AlarmManager::loop() {
   if (ringing_ >= 0 && millis() - ringStartMs_ > KC_ALARM_RING_MAX_MS) {
     if (++autoSnoozes_ > KC_ALARM_MAX_AUTOSNOOZE) {
       KC_LOG("ALARM %d: no response, stopping", ringing_ + 1);
+      Events.add(EventType::AlarmIgnored, ringing_, alarms_[ringing_].label);
       stop();
     } else {
       KC_LOG("ALARM %d: no response, auto-snooze %d", ringing_ + 1, autoSnoozes_);
@@ -158,17 +186,21 @@ void AlarmManager::snooze() {
   const int i = ringing_;
   snoozeUntil_[i] = time(nullptr) + AppCfg.get().snoozeMin * 60;
   KC_LOG("ALARM %d snoozed for %d min", i + 1, AppCfg.get().snoozeMin);
+  Events.add(EventType::AlarmSnooze, i, alarms_[i].label);
   ringing_ = -1;
   event_ = -1;
+  g_ringMagic = 0;
 }
 
 void AlarmManager::stop() {
   if (ringing_ < 0) return;
   KC_LOG("ALARM %d stopped", ringing_ + 1);
+  Events.add(EventType::AlarmStop, ringing_, alarms_[ringing_].label);
   snoozeUntil_[ringing_] = 0;
   ringing_ = -1;
   autoSnoozes_ = 0;
   event_ = -1;
+  g_ringMagic = 0;
 }
 
 void AlarmManager::test(int i) {

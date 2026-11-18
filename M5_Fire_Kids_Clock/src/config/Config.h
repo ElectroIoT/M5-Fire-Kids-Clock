@@ -37,6 +37,11 @@ constexpr uint32_t KC_WIFI_CONNECT_TIMEOUT_MS = 20000;
 constexpr uint32_t KC_WIFI_RETRY_MIN_MS       = 15000;
 constexpr uint32_t KC_WIFI_RETRY_MAX_MS       = 5UL * 60UL * 1000UL;
 #define KC_HOSTNAME   "kidsclock"
+// 1 = Wi-Fi modem sleep (saves ~30-70 mA, but the app's first request after a
+// pause can take seconds). 0 = always awake (default, USB-powered clock).
+#ifndef KC_WIFI_POWER_SAVE
+  #define KC_WIFI_POWER_SAVE 0
+#endif
 #define KC_AP_PREFIX  "KidsClock-"
 constexpr uint32_t KC_PORTAL_IDLE_TIMEOUT_MS  = 15UL * 60UL * 1000UL;
 

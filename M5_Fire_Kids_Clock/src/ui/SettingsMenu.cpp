@@ -145,6 +145,7 @@ void build(std::vector<MenuItem>& items) {
                    },
                    nullptr});
   items.push_back({"Parent setup (phone)", MenuItem::Action, nullptr, nullptr, [] { UI.go(ScreenId::WifiSetup); }});
+  items.push_back({"Pair phone app", MenuItem::Action, nullptr, nullptr, [] { UI.go(ScreenId::Pair); }});
   items.push_back({"Weather", MenuItem::Toggle, [](char* b, size_t n) { onOff(b, n, S().weatherEnabled); },
                    [](int) {
                      S().weatherEnabled ^= 1;

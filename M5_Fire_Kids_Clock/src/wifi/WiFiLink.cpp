@@ -19,7 +19,10 @@ void WiFiLink::begin() {
   WiFi.setAutoReconnect(false);   // reconnect is handled here with back-off
   WiFi.mode(WIFI_STA);
   WiFi.setHostname(KC_HOSTNAME);
-  WiFi.setSleep(true);            // modem sleep: lower power, plenty for NTP/weather
+  // Modem sleep off by default: with it, the first request after a pause took
+  // 4+ s or timed out (measured, weak signal). The clock runs on USB, so the
+  // extra current is fine. Bluetooth (if ever enabled) requires sleep back on.
+  WiFi.setSleep(KC_WIFI_POWER_SAVE ? true : false);
   uint8_t mac[6];
   WiFi.macAddress(mac);
   snprintf(apSsid_, sizeof apSsid_, KC_AP_PREFIX "%02X%02X", mac[4], mac[5]);
@@ -186,7 +189,7 @@ void WiFiLink::stopPortal() {
   dns.stop();
   WiFi.softAPdisconnect(true);
   WiFi.mode(WIFI_STA);
-  WiFi.setSleep(true);   // back to power saving
+  WiFi.setSleep(KC_WIFI_POWER_SAVE ? true : false);  // back to the normal mode
   portal_ = false;
   KC_LOG("Wi-Fi: setup AP closed");
   if (state_ == State::WaitRetry) stateMs_ = millis() - retryDelayMs_;  // retry right away

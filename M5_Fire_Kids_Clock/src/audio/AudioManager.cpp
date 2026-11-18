@@ -5,6 +5,8 @@
 #include "../config/Config.h"
 #include "../config/Pins.h"
 #include "../settings/SettingsManager.h"
+#include <esp_system.h>
+#include "../api/EventLog.h"
 
 AudioManager Audio;
 
@@ -59,8 +61,16 @@ void AudioManager::begin() {
 void AudioManager::applyVolume() {
   const Settings& s = AppCfg.get();
   uint8_t level = s.volume;
-  // Alarms must always be audible: never quieter than level 4 while ringing.
-  if (alarm_ && level < 4) level = 4;
+  // After a brownout restart the supply cannot feed the speaker at this volume
+  // (seen on USB power without the M5GO battery base): play 3 levels quieter
+  // until the next normal power-on, so the clock does not reset again and again.
+  if (esp_reset_reason() == ESP_RST_BROWNOUT) {
+    // Each further dip without a power-off steps down again (restarts counted in RTC memory).
+    const int steps = 3 * (int)(bootCount() > 1 ? bootCount() - 1 : 1);
+    level = (uint8_t)(level > steps + 1 ? level - steps : 1);
+  }
+  // Alarms must always be audible: never quieter than level 3 while ringing.
+  if (alarm_ && level < 3) level = 3;
   M5.Speaker.setVolume(masterFor(level));
 }
 

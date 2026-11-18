@@ -221,3 +221,18 @@ class ReminderScreen : public Screen {
 };
 
 extern ReminderScreen ReminderPopup;
+
+// ---------------------------------------------------------------------------
+// Pair phone app (6-digit code for the companion app)
+// ---------------------------------------------------------------------------
+class PairScreen : public Screen {
+ public:
+  void onEnter() override;
+  void onExit() override;
+  void onEvent(const InputEvent& e) override;
+  void render(Canvas& c, uint32_t now) override;
+  bool showsSeconds() const override { return true; }
+  uint32_t frameMs() const override { return 500; }
+  bool timesOut() const override { return false; }
+  const char* name() const override { return "pair"; }
+};

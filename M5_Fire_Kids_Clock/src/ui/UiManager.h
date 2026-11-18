@@ -16,6 +16,7 @@ enum class ScreenId : uint8_t {
   Routine,
   Stars,
   Reminder,
+  Pair,
   Count
 };
 

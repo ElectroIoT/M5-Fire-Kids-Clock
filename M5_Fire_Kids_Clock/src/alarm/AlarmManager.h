@@ -50,6 +50,8 @@ class AlarmManager {
   int64_t lastMinute_ = 0;
   uint32_t lastClockSteps_ = 0;
   int event_ = 0;
+  int resumeIdx_ = -1;        // alarm to ring again after an unexpected restart
+  uint32_t resumeEpoch_ = 0;
 };
 
 extern AlarmManager Alarms;

@@ -12,6 +12,7 @@
 #include "../ui/UiManager.h"
 #include "NightMode.h"
 #include "ConsoleExtras.h"
+#include "../api/EventLog.h"
 
 namespace console {
 
@@ -48,6 +49,8 @@ static void status() {
   if (Net.connected()) Serial.printf(" %s %d dBm", Net.ip().toString().c_str(), Net.rssi());
   Serial.println();
   Serial.printf("Battery: %d%% charging=%d %d mV\n", Battery.level(), Battery.charging(), Battery.millivolts());
+  Serial.printf("Uptime : %lu s, last start: %s (start #%lu since power-on)\n", (unsigned long)(millis() / 1000),
+                resetReasonText(), (unsigned long)bootCount());
   Serial.printf("Night  : scheduled=%d active=%d peeking=%d skipped=%d\n", NightMode.scheduled(), NightMode.active(),
                 NightMode.peeking(), NightMode.skipped());
   Serial.printf("Memory : heap %u (min %u), PSRAM free %u, render %lu us, push %lu us\n", (unsigned)ESP.getFreeHeap(),
@@ -90,6 +93,10 @@ static void exec(char* cmd) {
       Net.reconnectNow();
       Serial.println("OK saved");
     } else Serial.printf("Wi-Fi %s\n", Net.stateName());
+  } else if (!strcmp(w, "wifisleep")) {  // diagnostics: Wi-Fi modem sleep on/off
+    char* a = strtok_r(nullptr, " ", &save);
+    if (a) WiFi.setSleep(!strcmp(a, "on"));
+    Serial.printf("OK modem sleep %s\n", WiFi.getSleep() ? "on" : "off");
   } else if (!strcmp(w, "scan")) {
     const int n = WiFi.scanNetworks(false, true);  // blocking ~2 s, debug only
     for (int i = 0; i < n; ++i)

@@ -2,6 +2,7 @@
 #include "../clock/ClockManager.h"
 #include "../settings/SettingsManager.h"
 #include "../storage/StorageManager.h"
+#include "../api/EventLog.h"
 
 RoutineManager Routine;
 
@@ -131,6 +132,11 @@ int RoutineManager::complete(int i, bool* allDone) {
   st_.starsToday += earned;
   st_.totalStars += earned;
   saveState();
+  Events.add(EventType::RoutineDone, i, cfg_.tasks[i].name);
+  int pd, pt;
+  progress((tl::DayPeriod)cfg_.tasks[i].period, pd, pt);
+  if (pt > 0 && pd == pt) Events.add(EventType::RoutinePeriodDone, -1, tl::periodName((tl::DayPeriod)cfg_.tasks[i].period));
+  if (earned > 1) Events.add(EventType::RoutineAllDone, -1, "all jobs done today");  // bonus = whole day done
   KC_LOG("Routine: '%s' done, +%d star(s)", cfg_.tasks[i].name, earned);
   return earned;
 }

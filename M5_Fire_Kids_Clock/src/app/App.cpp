@@ -21,6 +21,9 @@
 #include "../routine/RoutineManager.h"
 #include "../weather/WeatherManager.h"
 #include "../ble/BleSpike.h"
+#include "../api/ApiServer.h"
+#include "../api/EventLog.h"
+#include "../api/Pairing.h"
 #include "NightMode.h"
 #include "SerialConsole.h"
 #include "ConsoleExtras.h"
@@ -35,6 +38,7 @@ static AlarmListScreen sAlarmList;
 static RingScreen sRing;
 static RoutineScreen sRoutine;
 static StarsScreen sStars;
+static PairScreen sPair;
 
 // ---- UI hooks (Phase 1: clock-only build) ---------------------------------
 namespace uihooks {
@@ -107,6 +111,7 @@ void help() {
                    "  remind N               show the reminder for job N\n"
                    "  weather LAT LON | off  set location (Open-Meteo) or turn weather off\n"
                    "  flashprep              stop drawing before a USB upload (Fire PSRAM/flash quirk)\n"
+                   "  pair | phones | unpair app pairing: show code / list phones / remove all\n"
                    "  ble on|off|mem         Bluetooth memory test (spike builds only)"));
 }
 void status() {
@@ -124,6 +129,18 @@ void status() {
 bool exec(const char* cmd, char* args) {
   if (!strcmp(cmd, "alarms")) { Alarms.printStatus(Serial); return true; }
   if (!strcmp(cmd, "routine")) { Routine.printStatus(Serial); return true; }
+  if (!strcmp(cmd, "pair")) {  // opens the pairing screen; prints the code for testing
+    UI.go(ScreenId::Pair);
+    Serial.printf("OK pairing code %s (valid %lu s)\n", Pair.windowOpen() ? Pair.code() : "-",
+                  (unsigned long)Pair.secondsLeft());
+    return true;
+  }
+  if (!strcmp(cmd, "phones")) {
+    Serial.printf("%d paired phone(s), API requests: %lu\n", Pair.count(), (unsigned long)api::requests());
+    for (int i = 0; i < Pair.count(); ++i) Serial.printf("  %d %s\n", i + 1, Pair.phoneName(i));
+    return true;
+  }
+  if (!strcmp(cmd, "unpair")) { Pair.revokeAll(); Serial.println("OK all phones removed"); return true; }
   if (!strcmp(cmd, "flashprep")) {
     Audio.stop();
     Canvas& c = Gfx.canvas();
@@ -305,6 +322,8 @@ void setup() {
   Leds.begin();
   Routine.begin();
   Weather.begin();
+  Pair.begin();
+  api::begin();
 
   UI.registerScreen(ScreenId::Home, &sHome);
   UI.registerScreen(ScreenId::Settings, &sSettings);
@@ -318,6 +337,7 @@ void setup() {
   UI.registerScreen(ScreenId::Routine, &sRoutine);
   UI.registerScreen(ScreenId::Stars, &sStars);
   UI.registerScreen(ScreenId::Reminder, &ReminderPopup);
+  UI.registerScreen(ScreenId::Pair, &sPair);
   UI.begin();
 
   console::begin();
@@ -374,6 +394,15 @@ void loop() {
   Audio.loop();
   Leds.loop();
   AppCfg.loop();
+  Pair.loop();
+  api::loop();
+  {
+    static bool wasLow = false;  // battery-low event for the app (edge only)
+    if (Battery.low() != wasLow) {
+      wasLow = Battery.low();
+      if (wasLow) Events.add(EventType::BatteryLow, -1, "battery low - please charge");
+    }
+  }
   mark(5, ts);
   UI.loop();
   mark(6, ts);
