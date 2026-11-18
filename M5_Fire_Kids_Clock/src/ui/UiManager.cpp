@@ -1,4 +1,5 @@
 #include "UiManager.h"
+#include <esp_system.h>
 #include "../config/Config.h"
 #include "../display/DisplayManager.h"
 #include "../display/Theme.h"
@@ -70,6 +71,8 @@ void UiManager::applyBrightness() {
   }
   if (dim != dimmed_) dirty_ = true;
   dimmed_ = dim;
+  // After a brownout restart keep the backlight low until the next power-on.
+  if (esp_reset_reason() == ESP_RST_BROWNOUT && level > 4) level = 4;
   Gfx.setBrightness(level);
 }
 

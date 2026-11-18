@@ -1,5 +1,7 @@
 #include "App.h"
 #include <M5Unified.h>
+#include <WiFi.h>
+#include <esp_system.h>
 #include "../config/Config.h"
 #include "../core/TimeLogic.h"
 #include "../storage/StorageManager.h"
@@ -238,6 +240,37 @@ bool exec(const char* cmd, char* args) {
 
 namespace app {
 
+// Power-safe start: after a brownout restart the supply is weak. Starting the
+// backlight bright and Wi-Fi immediately (the RF calibration current spike) made
+// a Fire on a shared PC USB port restart 13-16 times in 20 s without ever booting.
+// So: dim screen, Wi-Fi 10 s later and at reduced transmit power, until the next
+// normal power-on.
+static bool powerSafe = false;
+static bool netStarted = false;
+static bool wifiSkipped = false;  // offline because the supply cannot power Wi-Fi
+static constexpr uint32_t kPowerSafeWifiDelayMs = 10000;
+
+static void startNetwork() {
+  if (netStarted) return;
+  netStarted = true;
+  // Last resort: if the clock keeps restarting at Wi-Fi start (the radio's
+  // start-up current alone browned out a Fire on a shared PC USB port, even at
+  // reduced transmit power), run offline: clock, alarms and routine still work.
+  if (powerSafe && bootCount() >= 4) {
+    wifiSkipped = true;
+    KC_LOG("Power too weak for Wi-Fi (%lu restarts in a row) - running offline until the next power-on",
+           (unsigned long)(bootCount() - 1));
+    UI.toast("Power too weak - Wi-Fi off", 8000);
+    return;
+  }
+  Net.begin();
+  if (powerSafe) {
+    WiFi.setTxPower(WIFI_POWER_8_5dBm);
+    KC_LOG("Power-safe start: Wi-Fi on at reduced transmit power");
+  }
+  api::begin();  // needs the network stack that Net.begin() started
+}
+
 static void splash() {
   Canvas& c = Gfx.canvas();
   draw::vgradient(c, 0, 0, KC_SCREEN_W, KC_SCREEN_H, theme::SKY_MORNING.top, theme::SKY_MORNING.bottom);
@@ -248,7 +281,7 @@ static void splash() {
   else snprintf(title, sizeof title, "Kids Clock");
   draw::textC(c, title, 160, 172, draw::FONT_BIG, theme::PINK_DEEP);
   draw::textC(c, "M5 Fire  v" KC_FW_VERSION, 160, 204, draw::FONT_SMALL, theme::INK);
-  Gfx.setBrightness(AppCfg.get().brightness);
+  Gfx.setBrightness(powerSafe ? 2 : AppCfg.get().brightness);
   Gfx.push();
 }
 
@@ -312,18 +345,20 @@ void setup() {
   Storage.begin();
   AppCfg.begin();
   Gfx.begin();
+  powerSafe = esp_reset_reason() == ESP_RST_BROWNOUT;
+  if (powerSafe) KC_LOG("Power-safe start after a brownout: dim screen, Wi-Fi in %lu s", (unsigned long)(kPowerSafeWifiDelayMs / 1000));
   splash();
   Input.begin();
   Battery.begin();
   Clock.begin();
-  Net.begin();
   Alarms.begin();
   Audio.begin();
   Leds.begin();
   Routine.begin();
   Weather.begin();
   Pair.begin();
-  api::begin();
+  // Wi-Fi + API start last (or 10 s later after a brownout - see startNetwork()).
+  if (!powerSafe) startNetwork();
 
   UI.registerScreen(ScreenId::Home, &sHome);
   UI.registerScreen(ScreenId::Settings, &sSettings);
@@ -369,7 +404,8 @@ void loop() {
   console::loop();
   mark(0, ts);
   Clock.loop();
-  Net.loop();
+  if (!netStarted && millis() > kPowerSafeWifiDelayMs) startNetwork();
+  if (netStarted && !wifiSkipped) Net.loop();
   Battery.loop();
   mark(1, ts);
 
@@ -395,7 +431,7 @@ void loop() {
   Leds.loop();
   AppCfg.loop();
   Pair.loop();
-  api::loop();
+  if (netStarted && !wifiSkipped) api::loop();
   {
     static bool wasLow = false;  // battery-low event for the app (edge only)
     if (Battery.low() != wasLow) {
