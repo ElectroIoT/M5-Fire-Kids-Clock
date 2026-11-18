@@ -39,6 +39,11 @@ esptool.py --chip esp32 --port COM16 --baud 460800 write_flash 0x10000 M5-Fire-K
 
 Uploads at 921600 baud were unreliable on the test unit; 460800 (or 115200) works.
 
+**Important on the Fire:** if the clock is running, send `flashprep` on the serial console
+first (PlatformIO does this automatically through `tools/pio_flashprep.py`). It stops the
+screen drawing so the reset cannot catch the PSRAM mid-transfer - otherwise the flash
+chip can stop answering until the Fire is fully powered off (see Troubleshooting).
+
 ## Option 3 - PlatformIO (build from source)
 
 ```bash

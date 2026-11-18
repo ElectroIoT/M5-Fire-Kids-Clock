@@ -83,6 +83,12 @@ void reminderAlert() {
 }  // namespace uihooks
 
 static int ledOverride = -1;  // serial "led" test command
+
+// "flashprep": stop all drawing (= all PSRAM traffic) before a USB upload.
+// On the Fire the PSRAM shares data lines with the flash chip; an EN reset in the
+// middle of a PSRAM transfer can leave the PSRAM driving those lines, and the
+// flash then reads as 0xFF ("flash read err, 1000") until power is removed.
+static volatile bool quietForFlash = false;
 static uint32_t loopMaxUs = 0, loopMaxShownUs = 0, loopWindowMs = 0;  // performance stats
 
 namespace console {
@@ -99,7 +105,9 @@ void help() {
                    "  routine                list today's jobs\n"
                    "  done N | undo N        tick / untick job N\n"
                    "  remind N               show the reminder for job N\n"
-                   "  weather LAT LON | off  set location (Open-Meteo) or turn weather off"));
+                   "  weather LAT LON | off  set location (Open-Meteo) or turn weather off\n"
+                   "  flashprep              stop drawing before a USB upload (Fire PSRAM/flash quirk)\n"
+                   "  ble on|off|mem         Bluetooth memory test (spike builds only)"));
 }
 void status() {
   Serial.println("Alarms :");
@@ -116,6 +124,17 @@ void status() {
 bool exec(const char* cmd, char* args) {
   if (!strcmp(cmd, "alarms")) { Alarms.printStatus(Serial); return true; }
   if (!strcmp(cmd, "routine")) { Routine.printStatus(Serial); return true; }
+  if (!strcmp(cmd, "flashprep")) {
+    Audio.stop();
+    Canvas& c = Gfx.canvas();
+    c.fillScreen(theme::CREAM);
+    draw::textC(c, "Updating...", 160, 110, draw::FONT_BIG, theme::PINK_DEEP);
+    draw::textC(c, "please wait", 160, 146, draw::FONT_BODY, theme::INK_SOFT);
+    Gfx.push();
+    quietForFlash = true;
+    Serial.println("OK quiet - ready for upload");
+    return true;
+  }
   if (!strcmp(cmd, "ble")) {  // phase A memory spike (KC_BLE_SPIKE builds only)
     if (args && !strcmp(args, "on")) { blespike::printMem(Serial, "before"); blespike::start(); blespike::printMem(Serial, "ble-on"); }
     else if (args && !strcmp(args, "off")) { blespike::stop(); blespike::printMem(Serial, "ble-off"); }
@@ -318,6 +337,11 @@ const char* sectionName(int i) { return kSecName[i]; }
 uint32_t sectionWorst(int i) { return secShown[i]; }
 
 void loop() {
+  if (quietForFlash) {  // only the console runs; no PSRAM access at all
+    console::loop();
+    vTaskDelay(5);
+    return;
+  }
   const uint32_t t0 = micros();
   uint32_t ts = t0;
   M5.update();

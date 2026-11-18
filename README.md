@@ -148,7 +148,7 @@ test/            host unit tests             tools/        serial console + scre
 ## Serial console
 
 115200 baud, type `help`. Examples: `status`, `settime 2026-11-17 11:59 PM`, `alarm 1 6:30 AM`,
-`ring 1`, `stop`, `routine`, `done 2`, `sound 2`, `led reward`, `key b`, `shot`, `portal`.
+`ring 1`, `stop`, `routine`, `done 2`, `sound 2`, `led reward`, `key b`, `shot`, `portal`, `flashprep` (before uploads).
 `tools/kc.py` talks to it without resetting the board and saves screenshots:
 
 ```bash

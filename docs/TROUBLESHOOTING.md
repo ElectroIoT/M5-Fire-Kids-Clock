@@ -3,7 +3,7 @@
 | Problem | Fix |
 |---|---|
 | Picture is sideways / cut off | Old build forced rotation 1. Current firmware uses M5Unified's default (0 on M5GFX 0.3.0). If it is upside down on your unit, change the rotation logic in `DisplayManager::begin()`; console `rot 0` / `rot 2` tries it live. |
-| Upload fails: "Failed to communicate with the flash chip" / "Packet content transfer stopped" | Unplug USB, power off (double-click the red button), plug in again. Remove modules stacked on the M5-Bus. Use a data-capable cable. `upload_speed = 460800` (or 115200). |
+| Upload fails: "Failed to communicate with the flash chip" / "Packet content transfer stopped", or the clock stays dark after a reset with `flash read err, 1000` in the serial log | Fire PSRAM/flash quirk: a reset during a PSRAM transfer leaves the flash chip unreachable. **Fix now:** unplug USB, double-click the red button (power off), pull off the M5GO base for 10 s, reconnect. **Prevent it:** send `flashprep` before uploading (PlatformIO does it automatically via `tools/pio_flashprep.py`; for esptool type `flashprep` in a serial monitor first). Also use a good data cable and `upload_speed = 460800`. |
 | Screen says "What time is it?" | Time unknown after a power loss. Connect Wi-Fi (*Settings > Parent setup*) or *Settings > Set time & date*. |
 | Wi-Fi never connects | The Fire only supports **2.4 GHz**. Console `scan` lists networks; `status` shows the state. Check the password via the parent page. A backup network can be added. |
 | Time is wrong by 5 h 30 min | Something set UTC as local time; use *Sync time now* or `settime`. The firmware uses `IST-5:30`. |

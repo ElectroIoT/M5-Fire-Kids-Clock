@@ -41,5 +41,9 @@ buttons or speaker by hand - M5Unified does it for the detected board.
   does not switch the clock off at light load.
 - **IP5306 voltage:** the Fire's IP5306 reports only 0/25/50/75/100 % and no voltage
   (shows `0 mV`).
+- **Flash + PSRAM share the SPI data lines.** If the chip is reset (EN / upload) while
+  the PSRAM is mid-transfer, the flash may read as 0xFF until a full power-off. Observed
+  repeatedly on the test unit (K007 "PSRAM 2.0", an older, now discontinued revision);
+  avoided with `flashprep` before uploads.
 - **Power button:** single click = power on / reset, double click = power off (not while
   on USB).
