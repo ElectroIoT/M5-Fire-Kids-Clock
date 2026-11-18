@@ -1,7 +1,8 @@
 # Android companion app - plan
 
-Status: **phases A and B done** (18 Nov 2026) - the clock side of the link is ready
-([API.md](API.md)); the Android app itself is not built yet (next: phase C). Decided: daily use over
+Status: **phases A, B and C done** (18 Nov 2026). The app (working name "Kids Clock", package
+`com.electroiot.kidsclock`, local project `D:\My Project\Android\KidsClock`) finds, pairs with and
+shows the clock; next: phase D (alarm and routine editors). Decided: daily use over
 **home Wi-Fi**, **Bluetooth LE only for first-time setup**, stack = **NimBLE**.
 
 ## Phase A results - Bluetooth on the Fire (measured on the device)
@@ -151,7 +152,7 @@ on the same network (no cloud). A later opt-in could use a self-hosted push (e.g
 |---|---|---|
 | A | BLE memory spike on the Fire | **done** - NimBLE chosen, rules for Wi-Fi coexistence found |
 | B | Firmware API + mDNS + pairing | **done** - see [API.md](API.md); 21/21 checks, ~70 ms |
-| C | App skeleton: discovery, pairing, Today screen | phone finds `kidsclock.local`, pairs, shows status |
+| C | App skeleton: discovery, pairing, Today screen | **done (emulator)** - pairs with the code, Today screen live from the clock, survives restart, handles removal on the clock; mDNS discovery still to be tried on a real phone |
 | D | Alarms + Routine editors | edits round-trip and survive a clock reboot |
 | E | Settings, Stars history, Device | all clock settings editable from the app |
 | F | BLE provisioning flow | fresh clock set up from the app without touching its Wi-Fi |
