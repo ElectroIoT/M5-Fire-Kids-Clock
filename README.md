@@ -68,7 +68,7 @@ in Chrome or Edge, connect the Fire by USB-C, press *Install*.
 **esptool** (firmware from the [Releases](https://github.com/ElectroIoT/M5-Fire-Kids-Clock/releases) page):
 
 ```bash
-esptool.py --chip esp32 --port COM16 --baud 460800 write_flash 0x0 M5-Fire-Kids-Clock-v1.0.0-full.bin
+esptool.py --chip esp32 --port COM16 --baud 460800 write_flash 0x0 M5-Fire-Kids-Clock-v1.1.0-full.bin
 ```
 
 **From source (PlatformIO):**
@@ -135,6 +135,7 @@ test/            host unit tests             tools/        serial console + scre
 | Guide | |
 |---|---|
 | [Flashing & installing](docs/FLASHING.md) | web installer, esptool, PlatformIO, Arduino IDE |
+| [M5Burner](docs/M5BURNER.md) | publishing the firmware in M5Burner (fields, description, cover) |
 | [Hardware & GPIO](docs/HARDWARE.md) | pin map, Fire-specific notes |
 | [Screens](docs/SCREENS.md) | layouts of every screen |
 | [Wi-Fi, NTP & weather](docs/WIFI_NTP_WEATHER.md) | setup page, sync rules, Open-Meteo |

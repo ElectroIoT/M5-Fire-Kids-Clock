@@ -6,12 +6,14 @@ Target: **original M5Stack Fire (K007)**. Do not flash Core2 / CoreS3 / other va
 
 | File (Releases page) | Flash at | Use it for |
 |---|---|---|
-| `M5-Fire-Kids-Clock-v1.0.0-full.bin` | `0x0` | **first install** - bootloader + partitions + app in one file. Erases saved settings. |
-| `M5-Fire-Kids-Clock-v1.0.0-app.bin` | `0x10000` | **updates** - app only, **keeps** alarms, routine, stars, Wi-Fi, name |
+| `M5-Fire-Kids-Clock-v1.1.0-full.bin` | `0x0` | **first install** - bootloader + partitions + app in one file. Erases saved settings. |
+| `M5-Fire-Kids-Clock-v1.1.0-app.bin` | `0x10000` | **updates** - app only, **keeps** alarms, routine, stars, Wi-Fi, name |
 | `SHA256SUMS.txt` | - | checksums |
 
-The full image was verified on the test unit: flashed at `0x0` with esptool, booted,
-connected to Wi-Fi and synced the time.
+The v1.0.0 full image was verified on the test unit (flashed at `0x0`, booted, joined Wi-Fi,
+synced the time). v1.1.0 is built the same way and checked byte for byte against its parts;
+its code is the build tested on the device, with only the version number changed.
+To share the firmware in M5Burner see [M5BURNER.md](M5BURNER.md).
 
 ## Option 1 - in the browser (easiest)
 
@@ -28,13 +30,13 @@ pip install esptool
 First install (Windows `COM16`, macOS `/dev/cu.usbserial-XXXX`, Linux `/dev/ttyUSB0`):
 
 ```bash
-esptool.py --chip esp32 --port COM16 --baud 460800 write_flash 0x0 M5-Fire-Kids-Clock-v1.0.0-full.bin
+esptool.py --chip esp32 --port COM16 --baud 460800 write_flash 0x0 M5-Fire-Kids-Clock-v1.1.0-full.bin
 ```
 
 Update and keep settings:
 
 ```bash
-esptool.py --chip esp32 --port COM16 --baud 460800 write_flash 0x10000 M5-Fire-Kids-Clock-v1.0.0-app.bin
+esptool.py --chip esp32 --port COM16 --baud 460800 write_flash 0x10000 M5-Fire-Kids-Clock-v1.1.0-app.bin
 ```
 
 Uploads at 921600 baud were unreliable on the test unit; 460800 (or 115200) works.

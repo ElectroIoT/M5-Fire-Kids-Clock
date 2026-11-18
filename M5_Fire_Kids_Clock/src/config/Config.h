@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #define KC_APP_NAME     "M5 Fire Kids Clock"
-#define KC_FW_VERSION   "1.0.0"
+#define KC_FW_VERSION   "1.1.0"
 
 // ---- Time --------------------------------------------------------------------
 // POSIX TZ for India: IST, UTC+05:30, no daylight saving.
