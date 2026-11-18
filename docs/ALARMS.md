@@ -38,7 +38,7 @@ School Wake Up 6:30 AM (Mon-Fri), Homework Time 5:00 PM, Bedtime 9:00 PM.
 - Dedicated screen, excited character, flashing pink/red LEDs, screen brightness at
   least 8/10 (also during night mode).
 - Sound loops; with *Alarm fade-in* the volume rises from 25 % to 100 % over 30 s.
-  Alarms ignore quiet mode and never play below volume 4.
+  Alarms ignore quiet mode and never play below volume 3 (see AUDIO.md for the volume cap).
 - **A = Snooze** (5 / 10 / 15 min, *Settings > Snooze time*), **B or C = Stop**.
 - No response for 5 minutes -> automatic snooze; after 3 automatic snoozes it stops.
 - **Restart while ringing** (power dip, crash, watchdog): the alarm rings again right after
