@@ -63,6 +63,16 @@ constexpr uint32_t KC_PORTAL_IDLE_TIMEOUT_MS  = 15UL * 60UL * 1000UL;
 constexpr uint32_t KC_WEATHER_INTERVAL_MS = 30UL * 60UL * 1000UL;
 constexpr uint32_t KC_WEATHER_RETRY_MS    = 5UL * 60UL * 1000UL;
 
+// ---- Speaker -------------------------------------------------------------------
+// Loudest M5Unified master volume used for volume 10. Measured on the test Fire with
+// the M5GO base, powered from a PC USB port: 160+ reset the ESP32 within seconds
+// (brownout), 128 once in 3 min, 104 once in 5 min, 88 never (5 min alarm, API test
+// with sounds). With a strong 5 V / 2 A adapter it can probably be raised.
+// Volumes 1..10 are spread evenly up to this value.
+#ifndef KC_SPEAKER_MAX
+  #define KC_SPEAKER_MAX 88
+#endif
+
 // ---- Display -----------------------------------------------------------------
 constexpr int      KC_SCREEN_W        = 320;
 constexpr int      KC_SCREEN_H        = 240;

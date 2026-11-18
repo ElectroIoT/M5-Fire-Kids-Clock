@@ -72,6 +72,20 @@ matching and next-ring maths for every repeat mode, corrupted-record repair.
   + ~32 ms SPI push; worst loop pass ~95 ms when the static layer is rebuilt (every 5 s).
   Heap free ~206 KB, PSRAM free ~3.8 MB.
 
+## Phase B - local API and power (18 Nov 2026)
+
+| Test | Result |
+|---|---|
+| `tools/api_test.py` (pairing, 401/403/409, alarms, routine + events, settings, latency) | **21/21 PASS**, also at volume 10 |
+| API latency, Wi-Fi modem sleep on | first request after a pause 4 s or timeout - modem sleep now off by default |
+| API latency, modem sleep off | 16-144 ms, median ~70 ms; ping 3-13 ms |
+| 60 back-to-back requests | 60/60 OK, heap min 167 KB, no restart |
+| mDNS `kidsclock.local` / `_kidsclock._tcp` | announced (Windows resolution not separately verified) |
+| Alarm at old full volume, base off | brownout restart within 20-40 s (even at volume 6) |
+| Alarm at old volume 10, base on | 3 restarts in 3 min; alarm resumed each time |
+| Alarm at master 136 / 160 / 128 / 104 / 88, base on, PC USB port | 0 dips in 90 s / dips / 1 dip in 3 min / 1 dip in 5 min / **0 dips in 5 min** -> ceiling 88 |
+| Alarm resume after brownout | resumed in 2 of 3 observed restarts (1 unexplained miss) |
+
 ## NOT TESTED on hardware - please check
 
 - **Parent setup pages from a phone over the clock's own access point** (`KidsClock-XXXX`,

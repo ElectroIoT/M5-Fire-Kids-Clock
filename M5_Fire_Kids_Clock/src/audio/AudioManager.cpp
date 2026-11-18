@@ -31,9 +31,14 @@ static const char* sdPath(uint8_t s) {
   }
 }
 
+// Volume 1..10 spread evenly up to KC_SPEAKER_MAX. Measured on the test Fire
+// (with the M5GO base): master 136 played a 90 s alarm without trouble, 160 and
+// above caused brownout restarts - the speaker current is more than the supply holds.
 static uint8_t masterFor(uint8_t level) {
-  static const uint8_t curve[11] = {0, 40, 64, 88, 112, 136, 160, 184, 208, 232, 255};
-  return curve[level > 10 ? 10 : level];
+  if (level == 0) return 0;
+  if (level > 10) level = 10;
+  const int lo = KC_SPEAKER_MAX / 5;  // level 1 = 20 % of the ceiling
+  return (uint8_t)(lo + (KC_SPEAKER_MAX - lo) * (level - 1) / 9);
 }
 
 // Queue one tone (or a rest) on a channel; returns false if the queue is full.

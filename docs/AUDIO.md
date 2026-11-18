@@ -22,7 +22,10 @@
 
 ## Volume
 
-- *Settings > Volume* 0-10 (master volume). Alarms never play below 4.
+- *Settings > Volume* 0-10, spread evenly up to `KC_SPEAKER_MAX` (88 of 255): louder
+  settings made the Fire reset from the speaker current (see HARDWARE.md). Alarms never
+  play below 3. After a brownout restart the volume steps down 3 levels per dip until the
+  next power-on, and a ringing alarm resumes.
 - *Quiet mode* silences clicks and effects; **alarms still ring** (a muted alarm clock
   would be unsafe).
 - *Alarm fade-in*: 25 % -> 100 % over 30 s.

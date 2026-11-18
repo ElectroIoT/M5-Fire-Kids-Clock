@@ -1,6 +1,7 @@
 # Android companion app - plan
 
-Status: **phase A done** (18 Nov 2026), app not built yet. Decided: daily use over
+Status: **phases A and B done** (18 Nov 2026) - the clock side of the link is ready
+([API.md](API.md)); the Android app itself is not built yet (next: phase C). Decided: daily use over
 **home Wi-Fi**, **Bluetooth LE only for first-time setup**, stack = **NimBLE**.
 
 ## Phase A results - Bluetooth on the Fire (measured on the device)
@@ -33,8 +34,12 @@ Findings:
    with BT running **aborts** (`wifi_set_ps_process -> pm_set_sleep_type`, reproduced).
    With modem sleep forced on, the AP+STA setup pages time out. Rule: **never run BLE and
    the setup access point at the same time**; BLE runs only in its own setup window.
-4. Daily API traffic will be station-only Wi-Fi with modem sleep - latency to be measured
-   in phase B.
+4. Daily API traffic is station-only Wi-Fi. Phase B measured it: with modem sleep the first
+   request after a pause took 4 s or timed out, so modem sleep is now off by default
+   (16-144 ms). BLE (setup only) needs modem sleep on - switch it on just for that window.
+5. Phase B also found a speaker power limit (brownout restarts at high volume); the
+   firmware caps volume and resumes interrupted alarms. The app should show the
+   `power_weak` event / `volume_limited` flag as "check that the base is attached".
 
 ### Side finding: Fire upload / flash quirk (fixed)
 
@@ -145,7 +150,7 @@ on the same network (no cloud). A later opt-in could use a self-hosted push (e.g
 | # | Deliverable | Done when |
 |---|---|---|
 | A | BLE memory spike on the Fire | **done** - NimBLE chosen, rules for Wi-Fi coexistence found |
-| B | Firmware API + mDNS + pairing | `curl` with token reads/writes alarms; 401 without token; pages still work |
+| B | Firmware API + mDNS + pairing | **done** - see [API.md](API.md); 21/21 checks, ~70 ms |
 | C | App skeleton: discovery, pairing, Today screen | phone finds `kidsclock.local`, pairs, shows status |
 | D | Alarms + Routine editors | edits round-trip and survive a clock reboot |
 | E | Settings, Stars history, Device | all clock settings editable from the app |

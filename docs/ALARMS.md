@@ -41,6 +41,9 @@ School Wake Up 6:30 AM (Mon-Fri), Homework Time 5:00 PM, Bedtime 9:00 PM.
   Alarms ignore quiet mode and never play below volume 4.
 - **A = Snooze** (5 / 10 / 15 min, *Settings > Snooze time*), **B or C = Stop**.
 - No response for 5 minutes -> automatic snooze; after 3 automatic snoozes it stops.
+- **Restart while ringing** (power dip, crash, watchdog): the alarm rings again right after
+  boot if it is still within its 5-minute ringing window (kept in RTC memory). Verified on
+  the device: back ringing ~1.6 s after a brownout restart.
 - Stopping or snoozing stops the sound instantly (`M5.Speaker.stop()`).
 
 ## Editing

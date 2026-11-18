@@ -54,6 +54,7 @@ All pictures are real screenshots taken from the device over USB (`tools/kc.py s
 - **Parent setup from a phone** - scan the QR code on the clock, edit Wi-Fi (plus a backup
   network), alarms, routine, night mode, weather and name in a web page.
 - **Battery** - level, charging, low-battery warning.
+- **Local API for a phone app** - pairing code on the clock, `kidsclock.local:8080`, no cloud ([docs/API.md](docs/API.md)).
 
 <p align="center"><img src="docs/images/day.svg" alt="A day with the clock" width="100%"></p>
 
@@ -142,6 +143,7 @@ test/            host unit tests             tools/        serial console + scre
 | [Audio & microSD](docs/AUDIO.md) | sounds, WAV format, volume rules |
 | [Testing](docs/TESTING.md) | checklist with real results, what is not tested yet |
 | [Troubleshooting](docs/TROUBLESHOOTING.md) | common problems |
+| [Local API](docs/API.md) | JSON API for the companion app (pairing, alarms, routine, events) |
 | [Android app plan](docs/ANDROID_APP_PLAN.md) | companion app design (Wi-Fi + BLE setup) |
 | [Roadmap](docs/ROADMAP.md) | ideas |
 

@@ -36,6 +36,15 @@ buttons or speaker by hand - M5Unified does it for the detected board.
   reduce Wi-Fi sensitivity with the M5GO base attached.
 - **Speaker:** an 8-bit DAC through a small amplifier - expect a little hiss; melodies use
   a soft waveform to sound rounder than a square wave.
+- **Speaker power limit (important):** at high volume the speaker draws more current than
+  the supply holds and the ESP32 resets (brownout). Measured on the test unit, USB-powered:
+  without the M5GO base even volume 6 of the original scale reset it within a minute; with
+  the base (PC USB port), M5Unified master volume 160+ reset it, 128 once in 3 minutes,
+  104 once in 5 minutes, 88 never. The firmware therefore maps volume 10 to master 88
+  (`KC_SPEAKER_MAX` in `Config.h`). A strong 5 V / 2 A wall adapter may allow more.
+  Keep the **M5GO base attached** - it holds the battery that buffers current peaks.
+  Safety net: an alarm that was ringing during a restart rings again, and after a brownout
+  the volume steps down until the next power-on.
 - **Battery:** 500 mAh. With the screen on it lasts only a few hours - this is a
   USB-powered bedside clock. The firmware turns on IP5306 "boost keep-on" so the power IC
   does not switch the clock off at light load.
